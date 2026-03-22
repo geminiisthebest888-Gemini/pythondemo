@@ -37,6 +37,12 @@ env/
 .coverage
 htmlcov/
 
+# Claude Code - sensitive files
+.claude/*secret*
+.claude/*key*
+.claude/.env
+.claude/secrets.json
+
 # OS
 .DS_Store
 Thumbs.db
