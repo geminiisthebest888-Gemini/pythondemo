@@ -4,28 +4,51 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-def main() -> None:
-    """Run the main application."""
-    load_dotenv()
+load_dotenv()
 
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-    )
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+)
 
-    model = "anthropic/claude-sonnet-4"
+model = "stepfun/step-3.5-flash:free"
 
-    message = client.chat.completions.create(
+def add_user_message(messages, text):
+    user_message = {"role": "user", "content": text}
+    messages.append(user_message)
+
+def add_assistant_message(messages, text):
+    assistant_message = {"role": "assistant", "content": text}
+    messages.append(assistant_message)
+
+def chat(messages):
+    response = client.chat.completions.create(
         model=model,
         max_tokens=1000,
-        messages=[
-            {
-                "role": "user",
-                "content": "What is quantum computing? Answer in one sentence"
-            }
-        ]
+        messages=messages,
     )
-    print(message.choices[0].message.content)
+    return response.choices[0].message.content
+
+def main() -> None:
+    """Run the main application."""
+    # Start with an empty message list
+    messages = []
+
+    # Add the initial user question
+    add_user_message(messages, "Define quantum computing in one sentence")
+
+    # Get Claude's response
+    answer = chat(messages)
+    print(answer)
+    # Add Claude's response to the conversation history
+    add_assistant_message(messages, answer)
+
+    # Add a follow-up question
+    add_user_message(messages, "Write another sentence")
+
+    # Get the follow-up response with full context
+    final_answer = chat(messages)
+    print(final_answer)
 
 if __name__ == "__main__":
     main()
