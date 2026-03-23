@@ -12,6 +12,11 @@ client = OpenAI(
 )
 
 model = "stepfun/step-3.5-flash:free"
+system_prompt = """
+You are a patient math tutor.
+Do not directly answer a student's questions.
+Guide them to a solution step by step.
+"""
 
 def add_user_message(messages, text):
     user_message = {"role": "user", "content": text}
@@ -21,11 +26,16 @@ def add_assistant_message(messages, text):
     assistant_message = {"role": "assistant", "content": text}
     messages.append(assistant_message)
 
-def chat(messages):
+def chat(messages, system=None):
+    full_messages = []
+    if system:
+        full_messages.append({"role": "system", "content": system})
+    full_messages.extend(messages)
+
     response = client.chat.completions.create(
         model=model,
         max_tokens=1000,
-        messages=messages,
+        messages=full_messages,
     )
     return response.choices[0].message.content
 
@@ -38,7 +48,7 @@ def main() -> None:
     add_user_message(messages, "Define quantum computing in one sentence")
 
     # Get Claude's response
-    answer = chat(messages)
+    answer = chat(messages, system_prompt)
     print(answer)
     # Add Claude's response to the conversation history
     add_assistant_message(messages, answer)
@@ -47,7 +57,7 @@ def main() -> None:
     add_user_message(messages, "Write another sentence")
 
     # Get the follow-up response with full context
-    final_answer = chat(messages)
+    final_answer = chat(messages, system_prompt)
     print(final_answer)
 
 if __name__ == "__main__":
