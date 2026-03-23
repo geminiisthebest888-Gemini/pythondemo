@@ -6,9 +6,13 @@ from openai import OpenAI
 
 load_dotenv()
 
+api_key = os.getenv("OPENROUTER_API_KEY")
+if not api_key:
+    raise ValueError("OPENROUTER_API_KEY environment variable is not set")
+
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
+    api_key=api_key,
 )
 
 model = "stepfun/step-3.5-flash:free"
@@ -38,6 +42,8 @@ def chat(messages, system=None, temperature=1.0):
         messages=full_messages,
         temperature=temperature,
     )
+    if not response.choices:
+        raise ValueError("API returned no response choices")
     return response.choices[0].message.content
 
 def main() -> None:

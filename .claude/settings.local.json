@@ -14,7 +14,8 @@
       "Bash(python -c \"from dotenv import load_dotenv; print\\(''dotenv works''\\)\")",
       "Bash(python -m venv .venv)",
       "Bash(.venv/Scripts/pip install:*)",
-      "Bash(.venv/Scripts/python -c \"from dotenv import load_dotenv; from openai import OpenAI; print\\('All imports work!'\\)\")"
+      "Bash(.venv/Scripts/python -c \"from dotenv import load_dotenv; from openai import OpenAI; print\\('All imports work!'\\)\")",
+      "Bash(gh pr:*)"
     ]
   }
 }
