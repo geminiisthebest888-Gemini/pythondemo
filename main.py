@@ -38,6 +38,8 @@ def chat(messages, system=None, temperature=1.0):
 
     response = client.chat.completions.create(
         model=model,
+    response = client.chat.completions.create(
+        model=model,
         max_tokens=1000,
         messages=full_messages,
         temperature=temperature,
