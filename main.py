@@ -26,7 +26,7 @@ def add_assistant_message(messages, text):
     assistant_message = {"role": "assistant", "content": text}
     messages.append(assistant_message)
 
-def chat(messages, system=None):
+def chat(messages, system=None, temperature=1.0):
     full_messages = []
     if system:
         full_messages.append({"role": "system", "content": system})
@@ -36,6 +36,7 @@ def chat(messages, system=None):
         model=model,
         max_tokens=1000,
         messages=full_messages,
+        temperature=temperature,
     )
     return response.choices[0].message.content
 
@@ -48,7 +49,7 @@ def main() -> None:
     add_user_message(messages, "Define quantum computing in one sentence")
 
     # Get Claude's response
-    answer = chat(messages, system_prompt)
+    answer = chat(messages, system_prompt, 1.0)
     print(answer)
     # Add Claude's response to the conversation history
     add_assistant_message(messages, answer)
@@ -57,7 +58,7 @@ def main() -> None:
     add_user_message(messages, "Write another sentence")
 
     # Get the follow-up response with full context
-    final_answer = chat(messages, system_prompt)
+    final_answer = chat(messages, system_prompt,1.0)
     print(final_answer)
 
 if __name__ == "__main__":
